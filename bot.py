@@ -54,3 +54,44 @@ async def ask_phone(update: Update, context: CallbackContext) -> int:
 
     await update.message.reply_text("📌 لطفا شماره تماس خود را وارد کنید.")
     return ASK_PHONE
+
+async def confirm_order(update: Update, context: CallbackContext) -> int:
+    chat_id = update.message.chat_id
+    user_orders[chat_id]["phone"] = update.message.text.strip()
+
+    order = user_orders.pop(chat_id)
+    order_id = save_order(order ["product_code"], order["quantity"], order["name"], order["address"], order["phone"])
+
+    response = "📦 *سفارش شما:*\n" \
+               f"🛍 محصول: {order['product_code']}\n" \
+               f"💰 تعداد: {order['quantity']}\n" \
+               f"👤 نام: {order['name']}\n" \
+               f"📌 آدرس: {order['address']}\n" \
+               f"📞 تلفن: {order['phone']}\n" \
+               f"🔗 شماره سفارش: {order_id}"
+    await update.message.reply_text(response)
+    return ConversationHandler.END
+
+def main():
+    application = Application.builder().token(BOT_TOKEN).build()
+
+    conv_handler = ConversationHandler(
+        entry_points=[MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)],
+        states={
+            ASK_QUANTITY: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_name)],
+            ASK_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_address)],
+            ASK_ADDRESS: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_phone)],
+            ASK_PHONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, confirm_order)]
+        },
+        fallbacks=[]
+    )
+
+    application.add_handler(conv_handler)
+    application.run_polling()
+
+
+    if __name__ == "__main__":
+        main()
+    
+
+   
