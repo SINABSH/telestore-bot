@@ -4,34 +4,20 @@ from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
 
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
         user="root",  # Default user in XAMPP
-        password="",  # Empty password in XAMPP
-        database="telegram_store"
+        password=DB_PASSWORD,
+        database=DB_NAME
     )
 
-def get_product_details(product_code):
-    db = connect_db()
-    cursor = db.cursor()
-    
-    query = "SELECT name, price, available_stock, colors FROM products WHERE code = %s"
-    cursor.execute(query, (product_code,))
-    product = cursor.fetchone()
-
-    db.close()
-
-    return product
-
-
-# Test Connection
-if __name__ == "__main__":
-    test_code = "P0001"
-    product = get_product_details(test_code)
-    if product:
-        print(f"Product Found: {product}")
-    else:
-        print(f"Product Not Found.")
+def save_order(product_code, quantity, customer_name, address, phone):
+    conn = connect_db()
+    cursor = conn.cursor()
 

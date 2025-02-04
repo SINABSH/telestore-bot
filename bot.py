@@ -15,7 +15,7 @@ async def handle_message(update: Update, context: CallbackContext) -> None:
 
     if product:
         name, price, stock, colors = product
-        response = f"🛍 *{name}*\n💰 Price: ${price}\n📦 Stock: {stock}\n🎨 Colors: {colors}"
+        response = f"🛍 *{name}*\n💰 قیمت: ${price}\n📦 موجودی: {stock}\n🎨 رنگ ها: {colors}"
     else:
         response = "❌ Product not found."
 
