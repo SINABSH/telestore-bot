@@ -21,3 +21,15 @@ def save_order(product_code, quantity, customer_name, address, phone):
     conn = connect_db()
     cursor = conn.cursor()
 
+    query = """
+INSERT INTO orders (product_code, quantity, customer_name, address, phone)
+VALUES (%s, %s, %s, %s, %s)
+"""
+    cursor.execute(query, (product_code, quantity, customer_name, address, phone))
+    conn.commit()
+    order_id = cursor.lastrowid
+
+    cursor.close()
+    conn.close()
+    return order_id
+
