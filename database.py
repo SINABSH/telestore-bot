@@ -11,8 +11,8 @@ DB_NAME = os.getenv("DB_NAME")
 
 def connect_db():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",  # Default user in XAMPP
+        host=DB_HOST,
+        user=DB_USER,  # Default user in XAMPP
         password=DB_PASSWORD,
         database=DB_NAME
     )
