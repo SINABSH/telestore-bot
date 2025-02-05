@@ -15,7 +15,8 @@ def connect_db():
         host=DB_HOST,
         user=DB_USER,
         password=DB_PASSWORD,
-        database=DB_NAME
+        database=DB_NAME,
+        port=3306 
     )
 
 # Fetch product details by product code
